@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+
+#maincontainer {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    text-align: center;
+}
+
+#slots {
+    display: flex;
+    flex-direction: row;
+    image-rendering: pixelated;
+    gap: 50px;
+}
+
+#slots div {
+    width: 240px;
+    height: 170px;
+    background-image: url('Sheet.png');
+    background-size: 240px 850px;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+#prize {
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+#Again {
+    width: 100px;
+    height: 20px;
+}
+</style>
+<body>
+    <div id="maincontainer">
+        <h1 id="prize">Let's go gambling!</h1>
+        <hr>
+        <div id="slots"></div>
+        <div style="height: 20px"></div>
+        <div>
+            <input id="Input" placeholder="Place your bets"></input>
+            <button id="Again">Again!</button>
+        </div>
+    </div>
+</body>
+<script>
+
+    // 0 - Cherry
+    // 1 - Bar
+    // 2 - Bell
+    // 3 - Seven
+    // 4 - Clover
+let r = [];
+const container = document.getElementById("slots");
+const prize = document.getElementById("prize");
+
+const NameTable = {
+    0: "Cherry",
+    1: "Cherry",
+    2: "Cherry",
+    3: "Clover",
+    4: "Clover",
+    5: "Clover",
+    6: "Bar",
+    7: "Bar",
+    8: "Bell",
+    9: "Seven"
+};
+
+const SymbolTable = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 1,
+    4: 1,
+    5: 1,
+    6: 2,
+    7: 2,
+    8: 3,
+    9: 4
+};
+
+const PayoutTable = {
+    "Cherry": { 1: 2, 2: 5, 3: 10 },
+    "Clover": {3: 20},
+    "Bar": {3: 50},
+    "Bell": {3: 100},
+    "Seven": {3: 250}
+};
+
+function Spin() {
+    container.innerHTML = "";
+    prize.textContent = "Let's go gambling!";
+    for (let i = 0; i < 3; i++) {
+        r[i] = Math.floor(Math.random() * 10);
+        const number = document.createElement("div");
+        number.style.backgroundImage = "url('Sheet.png')";
+        number.style.backgroundPosition = `0px ${-SymbolTable[r[i]] * 170}px`;
+        number.style.backgroundSize = "240px 850px";
+        number.style.width = "240px";
+        number.style.height = "170px";
+        console.log(r[i]);
+        container.appendChild(number);
+
+        AnimateSlot(number, SymbolTable[r[i]], 1500, i * 200);
+    }
+};
+
+const spriteHeight = 170;
+const totalRows = 5;
+
+function AnimateSlot(div, targetRow, duration, delay) {
+    const startTime = performance.now();
+
+    function animate(time) {
+        const elapsed = time - startTime - delay;
+        if (elapsed < 0) {
+            requestAnimationFrame(animate);
+            return;
+        }
+        
+        let progress = Math.min(elapsed / duration, 1);
+
+        const spins = 5;
+        const currentRow = (spins * totalRows * progress + targetRow) % totalRows;
+
+        div.style.backgroundPosition = `0px ${-currentRow * spriteHeight}px`;
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            div.style.backgroundPosition = `0px ${-targetRow * spriteHeight}px`;
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+function Output() {
+
+    const counts = {};
+
+    r.forEach(num => {
+        const symbol = NameTable[num];
+        counts[symbol] = (counts[symbol] || 0) + 1;
+    });
+
+    for (const [symbol, count] of Object.entries(counts)) {
+        if(PayoutTable[symbol][count]) {
+            console.log(count, symbol, PayoutTable[symbol][count]);
+            prizeValue = (document.getElementById("Input").value || 0) * PayoutTable[symbol][count];
+            setTimeout(() => {
+                prize.textContent = prizeValue / 2;
+            }, 1500);
+        }
+    };
+
+    /*
+    const hasCherry = r.some(num => num === i).length;
+    if (hasCherry)
+    for (let i = 0; i < 10; i++) {
+        let count = r.filter(num => num === i).length;
+            if (count == 2) {
+                console.log("Two of a kind " + NameTable[r[i]])
+            } else if (count === 3) {
+                console.log('JackPot!')
+            }
+    };
+    */
+};
+
+
+wait = 1;
+setTimeout(() => {
+    wait = 0
+}, 1500);
+
+document.getElementById("Again").onclick = function() {
+    if (wait == 0) {
+        Spin();
+        Output();
+        wait = 1; 
+        setTimeout(() => {
+            wait = 0
+        }, 1500); 
+    };
+}
+
+Spin();
+Output();
+</script>
+</html>
