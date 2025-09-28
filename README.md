@@ -23,4 +23,4 @@ Hope you like this this games and good luck!
 # On the other note some textures came from other people:
 - https://ivoryred.itch.io/pixel-poker-cards (IvoryRed) - Cards
 
-# Also please use Chromium based browsers for testing!
+# Also please use Chromium based browsers and PCs (this game isn't tested for mobile and there might be bugs) for testing! 
