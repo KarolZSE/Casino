@@ -44,6 +44,34 @@
     width: 100px;
     height: 20px;
 }
+#OptionDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+#Chip {
+    display: flex;
+    justify-content: center;
+    image-rendering: pixelated;
+    align-items: center;
+}
+
+#Input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 30px;
+    height: 20px;
+    position: relative;
+    top: -2px;
+    font-size: x-small;
+    text-align: center;
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+}
 </style>
 <body>
     <div id="maincontainer">
@@ -51,22 +79,19 @@
         <hr>
         <div id="slots"></div>
         <div style="height: 20px"></div>
-        <div>
-            <input id="Input" placeholder="Place your bets"></input>
+        <div id="OptionDiv">
+            <div id="Chip">
+                <input id="Input" title="Place your bets" placeholder="?"></input>  
+            </div>
             <button id="Again">Again!</button>
         </div>
     </div>
 </body>
 <script>
-
-    // 0 - Cherry
-    // 1 - Bar
-    // 2 - Bell
-    // 3 - Seven
-    // 4 - Clover
 let r = [];
 const container = document.getElementById("slots");
 const prize = document.getElementById("prize");
+const InputBox = document.getElementById("Input");
 
 const NameTable = {
     0: "Cherry",
@@ -161,7 +186,7 @@ function Output() {
     for (const [symbol, count] of Object.entries(counts)) {
         if(PayoutTable[symbol][count]) {
             console.log(count, symbol, PayoutTable[symbol][count]);
-            prizeValue = (document.getElementById("Input").value || 0) * PayoutTable[symbol][count];
+            prizeValue = (InputBox.value || 0) * PayoutTable[symbol][count];
             setTimeout(() => {
                 prize.textContent = prizeValue / 2;
             }, 1500);
@@ -199,6 +224,35 @@ document.getElementById("Again").onclick = function() {
     };
 }
 
+let Chips = document.getElementById("Chip")
+Chips.style.backgroundImage = "url('Chips.png')";
+Chips.style.width = "64px";
+Chips.style.height = "60px";
+Chips.style.backgroundSize = "64px 480px";
+
+InputBox.value = "";
+
+InputBox.oninput = function() {
+    InputBox.style.color = "white";
+    if (InputBox.value >= 500) {
+        Chips.style.backgroundPosition = "0px -420px";
+    } else if (InputBox.value >= 250) {
+        Chips.style.backgroundPosition = "0px -360px";
+    } else if (InputBox.value >= 100) {
+        Chips.style.backgroundPosition = "0px -300px";
+    } else if (InputBox.value >= 25) {
+        Chips.style.backgroundPosition = "0px -240px";
+    } else if (InputBox.value >= 10) {
+       Chips.style.backgroundPosition = "0px -180px";
+    } else if (InputBox.value >= 5) {
+        Chips.style.backgroundPosition = "0px -120px";
+    } else if (InputBox.value >= 2) {
+        Chips.style.backgroundPosition = "0px -60px";
+    } else {
+        Chips.style.backgroundPosition = "0px 0px";
+        InputBox.style.color = "black";
+    }
+};
 Spin();
 Output();
 </script>
