@@ -10,6 +10,18 @@
 </head>
 <style>
 
+button {
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    width: 130px;
+    height: 40px;
+    border: 0;
+    border-radius: 0;
+    color: white;
+    background-color: #181818;
+}
+
 #maincontainer {
     position: absolute;
     top: 40%;
@@ -72,9 +84,26 @@
     font-style: normal;
 
 }
+
+#moneytext {
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    width: 130px;
+    height: 45px;
+    border: 0;
+    border-radius: 0;
+    color: white;
+    background-color: #181818;
+}
 </style>
 <body>
     <div id="maincontainer">
+        <p id="moneytext">You have 100 Chips</p>
         <h1 id="prize">Let's go gambling!</h1>
         <hr>
         <div id="slots"></div>
@@ -92,6 +121,8 @@ let r = [];
 const container = document.getElementById("slots");
 const prize = document.getElementById("prize");
 const InputBox = document.getElementById("Input");
+const moneytext = document.getElementById("moneytext");
+money = 100;
 
 const NameTable = {
     0: "Cherry",
@@ -189,6 +220,8 @@ function Output() {
             prizeValue = (InputBox.value || 0) * PayoutTable[symbol][count];
             setTimeout(() => {
                 prize.textContent = prizeValue / 2;
+                money += prizeValue / 2;
+                moneytext.textContent = "You have " + money + " chips";
             }, 1500);
         }
     };
@@ -216,6 +249,7 @@ setTimeout(() => {
 document.getElementById("Again").onclick = function() {
     if (wait == 0) {
         Spin();
+        money -= InputBox.value;
         Output();
         wait = 1; 
         setTimeout(() => {
@@ -233,6 +267,13 @@ Chips.style.backgroundSize = "64px 480px";
 InputBox.value = "";
 
 InputBox.oninput = function() {
+    InputBox.value = InputBox.value.replace(/[^0-9]/g,"");
+    InputBox.style.color = "white";
+    if (InputBox.value > money) {
+        alert("You can't bet that, it's outside of your budget!")
+        InputBox.value = "";
+    }
+
     InputBox.style.color = "white";
     if (InputBox.value >= 500) {
         Chips.style.backgroundPosition = "0px -420px";
@@ -248,6 +289,8 @@ InputBox.oninput = function() {
         Chips.style.backgroundPosition = "0px -120px";
     } else if (InputBox.value >= 2) {
         Chips.style.backgroundPosition = "0px -60px";
+        InputBox.style.color = "black";
+        
     } else {
         Chips.style.backgroundPosition = "0px 0px";
         InputBox.style.color = "black";

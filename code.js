@@ -1,5 +1,4 @@
 const scoreboard = document.getElementById("score");
-const scoreboard2 = document.getElementById("score2");
 const escoreboard = document.getElementById("enemy");
 const splitt = document.getElementById("Splitt");
 const DoubleDown = document.getElementById("DoubleDown");
@@ -9,6 +8,7 @@ const prize = document.getElementById("prize");
 const InputBox = document.getElementById("Input");
 const allButtons = document.querySelectorAll(".buttons");
 const info = document.getElementById("Info");
+const moneytext = document.getElementById("moneytext");
 
 score = 0
 escore = 0
@@ -22,7 +22,6 @@ firstti = 1
 worthinsuring = 0
 Insure = 0
 money = 100
-let tempo;
 // https://www.youtube.com/watch?v=OV8MVmtgmoY - Card Flip
 // https://ivoryred.itch.io/pixel-poker-cards - Cards
 // https://gamebetweenthelines.itch.io/2d-top-down-pixel-art-tileset-casino - Tileset
@@ -30,8 +29,10 @@ let tempo;
 // Add sound, add deck, add advanced blackjack, add animation
 
 document.addEventListener("keydown", function(event) {
+    info.style.display = "none";
     if (firstti == 1) {
         if (event.key === "Enter") {
+            firstti = 0;
             allButtons.forEach(button => {
                 button.disabled = false;
             })
@@ -49,16 +50,13 @@ document.addEventListener("keydown", function(event) {
             setTimeout(() => {
                 ldc = RandomCard(1, 1);
             }, 750);
-
-            firstti = 0;
         }
     }  
 });
 
-momo = 0;
-function RandomCard(x, m, z = momo) {
-    //let r = Math.floor(Math.random() * 52);
-    r = 9;
+function RandomCard(x, m) {
+    info.style.display = "none";
+    let r = Math.floor(Math.random() * 52);
     console.log(r, r % 13);
     const card = document.createElement("div");
     card.classList.add("thecard");
@@ -100,7 +98,7 @@ function RandomCard(x, m, z = momo) {
     });
 
     if (m == 1) {
-        if (firste == 0 && document.getElementById("Insurance").style.display == "inline" && r % 13 >= 9) {
+        if (firste == 0 && document.getElementById("Insurance").style.display == "inline" && r % 13 == 9) {
             worthinsuring = 1;
         } else if (firste == 1) {
             if (r % 13 == 0) {
@@ -110,12 +108,9 @@ function RandomCard(x, m, z = momo) {
         }
     };
 
-    HitandMiss();
-    console.log(scoreboard.textContent, scoreboard2.textContent);
     if (m == 0) {
         if (ddCheck != -1 && first == 1) {
             if (ddCheck == r % 13) {
-                tempo = card;
                 console.log("Do you want to double down?");
                 splitt.style.display = "inline";  
             } else {
@@ -123,56 +118,9 @@ function RandomCard(x, m, z = momo) {
                 splitt.style.display = "";  
             }
         };
-
-        if (z == 2) {
-            if (t == 0) {
-                if (scoreboard.textContent < 0 && scoreboard2.textContent < 0) {
-                    alert("Both hands lost!")
-                }
-                if (score2 + 11 > 21) {
-                    score2 += 1;
-                } else {
-                    score2 += 11;
-                    ace =+ 1;
-                }
-            } else if (1 <= (t) && (t) < 10) {
-                score2 += r % 13 + 1
-            } else {
-                alert("bruh2");
-                score2 += 10
-            }
-            scoreboard2.textContent = score2;
-            if (ace >= 1) {
-                scoreboard2.textContent = score2 + " / " + (score2 - (10));
-            };
-            console.log(score2);
-            YouLose2();
-            function YouLose2() {
-                if (score2 > 21) {
-                    if (ace >= 1) {
-                        score2 -= 10;
-                        ace -= 1;
-                        scoreboard2.textContent = score2;
-                        YouLose2();
-                    } else if (score < 21) {
-                        score2 = -10000000;
-                        momo = 0;
-                    } else {
-                        money -= InputBox.value;
-                        info.innerHTML = "Bad Luck! You've busted. <br>You've lost " + (InputBox.value || 0) + " chips.";
-                        End();
-                    }
-                }            
-            };
-            return;
-        }
-
         ddCheck = r % 13;
         t = r % 13
         if (t == 0) {
-            if (scoreboard.textContent < 0 && scoreboard2.textContent < 0) {
-                alert("Both hands lost!")
-            }
             if (score + 11 > 21) {
                 score += 1;
             } else {
@@ -182,7 +130,6 @@ function RandomCard(x, m, z = momo) {
         } else if (1 <= (t) && (t) < 10) {
             score += r % 13 + 1
         } else {
-            alert("bruh2");
             score += 10
         }
         scoreboard.textContent = score;
@@ -197,9 +144,6 @@ function RandomCard(x, m, z = momo) {
                     ace -= 1;
                     scoreboard.textContent = score;
                     YouLose();
-                } else if (score2 < 21) {
-                    score = -10000000;
-                    momo = 2;
                 } else {
                     money -= InputBox.value;
                     info.innerHTML = "Bad Luck! You've busted. <br>You've lost " + (InputBox.value || 0) + " chips.";
@@ -231,7 +175,7 @@ function RandomCard(x, m, z = momo) {
                     escoreboard.textContent = score;
                     DealerLose();
                 } else {
-                    money += InputBox.value;
+                    money += Number(InputBox.value);
                     info.innerHTML = "Congratulations! Dealer busted!<br>You've earned " + (InputBox.value || 0) + " chips.";
                     End();
 
@@ -260,18 +204,6 @@ document.getElementById("Hit").onclick = function() {
     RandomCard(l, 0);
 }
 
-document.getElementById("Hit2").onclick = function() {
-    l += 1
-    DoubleDown.style.display = "none";
-    RandomCard(l + 6, 0, 2);
-}
-
-function HitandMiss() {
-    if (scoreboard.textContent < 0 && scoreboard2.textContent < 0) {
-        alert("Both hands lost!")
-    }
-}
-
 document.getElementById("Stand").onclick = function() {
     ldc.style.transform = "rotateY(0deg)";
     while (escoreboard.textContent < 17) {
@@ -286,26 +218,23 @@ document.getElementById("Stand").onclick = function() {
 
     } else if (escoreboard.textContent > scoreboard.textContent) {
         money -= InputBox.value;
-        info.innerHTML = "Bad Luck! The dealer beat <br>you " + escoreboard.textContent + ". You've lost " + (InputBox.value || 0) + " chips.";
+        info.innerHTML = "Bad Luck! The dealer beat <br>you with " + escoreboard.textContent + ". You've lost " + (InputBox.value || 0) + " chips.";
         End();
     } else if (scoreboard.textContent > escoreboard.textContent) {
-        money += InputBox.value;
+        money += Number(InputBox.value);
         info.innerHTML = "Congratulations! You've beat <br> the dealer. You've earned " + (InputBox.value || 0) + " chips.";
         End();
     } else {
-        alert("Draw!")
+        info.innerHTML = "There is a push (draw)! <br>Money returns to you!";
+        if (worthinsuring == 1 && Insure > 0) {
+            money -= InputBox.value;  
+        }
         End();
     }
 }
 
 splitt.onclick = function() {
-    tempo.style.left = "288px";
-    score = score / 2;
-    score2 = score;
-    scoreboard.textContent = score;
-    scoreboard2.textContent = score2;
-    RandomCard(1, 0);
-    RandomCard(6, 0, 2);
+    alert("No Splitting!")
 }
 
 document.getElementById("Insurance").onclick = function() {
@@ -314,15 +243,21 @@ document.getElementById("Insurance").onclick = function() {
 }
 
 DoubleDown.onclick = function() {
-    alert("You've double down!")
-    document.getElementById("Hit").click();
-    document.getElementById("Stand").click();
+    if (money >= InputBox.value * 2) {
+       InputBox.value = InputBox.value * 2; 
+        alert("You've double down!")
+        document.getElementById("Hit").click();
+        document.getElementById("Stand").click();
+    } else {
+        alert("You don't have enough money to double down!")
+    }
 }
 
 Next.onclick = function() {
     document.getElementById("Insurance").style.display = "none";
     splitt.style.display = "none";
     DoubleDown.style.display = "";
+    console.log("Buttons");
     allButtons.forEach(button => {
         button.disabled = false;
     })
@@ -330,8 +265,8 @@ Next.onclick = function() {
     InputBox.disabled = true;
     l = 1;
     r = 1;
+    ace = 0;
     score = 0;
-    firstti = 1
     worthinsuring = 0
     first = 1
     firste = 1
@@ -396,6 +331,8 @@ InputBox.oninput = function() {
 };
 
 function End() {
+    moneytext.textContent = "You have " + money + " chips";
+    info.style.display = "";
     Next.style.display = "inline";
     InputBox.disabled = false;
     console.log(Insure)
