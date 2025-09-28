@@ -21,4 +21,6 @@ You play by "normal" rules but:
 Hope you like this this games and good luck!
 
 # On the other note some textures came from other people:
-- https://ivoryred.itch.io/pixel-poker-cards (IvoryRed) - Cards 
+- https://ivoryred.itch.io/pixel-poker-cards (IvoryRed) - Cards
+
+# Also please use Chromium based browsers for testing!
