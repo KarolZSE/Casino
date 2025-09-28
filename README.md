@@ -5,10 +5,11 @@ In both you first get 100 Chips on the start.
 In slots:
 This are your chances:
 | Cherry | 2x | 5x | 10x |
-| Clover | - | - | 20x |
-| BAR | - | - | 50x |
-| Bell | - | - | 100x |
-| Seven | - | - | 250x |
+|--------|----|----|-----|
+| Clover |  - |  - | 20x |
+|   BAR  |  - |  - | 50x |
+|  Bell  |  - | - | 100x |
+| Seven  |  - | - | 250x |
 
 In blackjack:
 You play by "normal" rules but:
@@ -19,5 +20,5 @@ You play by "normal" rules but:
 
 Hope you like this this games and good luck!
 
-# On other note some textures come from other people:
-https://ivoryred.itch.io/pixel-poker-cards (IvoryRed) - Cards 
+# On the other note some textures came from other people:
+- https://ivoryred.itch.io/pixel-poker-cards (IvoryRed) - Cards 
